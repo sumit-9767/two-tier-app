@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: two-tier-app-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: two-tier-app
+  template:
+    metadata:
+      labels:
+        app: two-tier-app
+    spec:
+      containers:
+      - name: two-tier-app
+        image: 9767264150/flaskapp:latest
+        env:
+        - name: MYSQL_HOST
+          value: 10.97.185.44
+        - name: MYSQL_USER
+          value: root
+        - name: MYSQL_PASSWORD
+          value: admin
+        - name: MYSQL_DB
+          value: mydb
+        ports:
+          - containerPort: 5000
+        imagePullPolicy: Always
