@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: two-tier-app
-        image: 9767264150/flaskapp:latest
+        image: 9767264150/flaskapp:16
         env:
         - name: MYSQL_HOST
           value: 10.97.185.44
