@@ -13,6 +13,8 @@ pipeline{
 	environment {
 		DOCKERHUB_CREDS = credentials('docker-id')
 		IMAGE_NAME = "9767264150/flaskapp"
+		GITHUB_USER = "sumit-9767"
+		GITHUB_REPO = "two-tier-app"
 	}
 	stages{
 		stage ('Checkout'){
@@ -35,12 +37,24 @@ pipeline{
 				}
 			}
 		}
-// 		stage {
-// 			steps {
-// 				script {
+		stage ('Deploy to K8s') {
+			steps {
+				script {
+				    withCredentials([string(credentialsId: 'github', variable: 'GIT_TOKEN')]) {
+    				    sh '''
+    				        git config user.email "batras781@gmail.com"
+    				        git config user.name "sumit"
+    				        sed -i "s|image: 9767264150/flaskapp:.*|image: 9767264150/flaskapp:${BUILD_ID}|g" two_deploy.yaml
+    				        git add two_deploy.yaml
+    				        git commit -m "Updating the version of image to ${BUILD_ID}"
+    				        git push https://${GIT_TOKEN}@github.com/sumit-9767/two-tier-app/ HEAD:main
+    				    '''
+				    }
 				
-// 				}
-// 			}
-// 		}
+				}
+			}
+		}
 	}
 }
+
+
